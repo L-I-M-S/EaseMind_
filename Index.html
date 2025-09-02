@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EaseMind - Mental Health Companion</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <h1>EaseMind</h1>
+        <p>Your mental health companion for grief, panic, and depression.</p>
+    </header>
+
+    <main>
+        <!-- Breathing Exercise Section -->
+        <section id="breathing">
+            <h2>Guided Breathing</h2>
+            <p>Follow the circle to calm your mind.</p>
+            <div id="breathing-circle"></div>
+            <button id="start-breathing">Start Breathing</button>
+            <p id="breathing-instruction">Breathe In...</p>
+        </section>
+
+        <!-- Grounding Exercise Section -->
+        <section id="grounding">
+            <h2>5-4-3-2-1 Grounding</h2>
+            <p>Use your senses to stay present.</p>
+            <div id="grounding-step"></div>
+            <button id="start-grounding">Start Grounding</button>
+        </section>
+
+        <!-- Mood Tracker Section -->
+        <section id="mood-tracker">
+            <h2>Mood Tracker</h2>
+            <p>Log your mood to track your progress.</p>
+            <select id="mood-select">
+                <option value="5">Very Good</option>
+                <option value="4">Good</option>
+                <option value="3">Neutral</option>
+                <option value="2">Low</option>
+                <option value="1">Very Low</option>
+            </select>
+            <textarea id="mood-notes" placeholder="Add notes (optional)"></textarea>
+            <button id="log-mood">Log Mood</button>
+            <canvas id="mood-chart" width="300" height="200"></canvas>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 EaseMind. For emergencies, call <a href="tel:988">988</a> (U.S.) or your local crisis line.</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
