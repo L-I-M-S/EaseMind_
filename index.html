@@ -9,6 +9,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
+    <a href="#main-content" class="sr-only">Skip to main content</a>
+
     <!-- Onboarding Modal -->
     <div id="onboarding-modal" class="modal" role="dialog" aria-labelledby="modal-title">
         <div class="modal-content">
@@ -33,12 +35,12 @@
         <button class="tab-btn" data-tab="mood-tracker" role="tab" aria-selected="false" aria-controls="mood-tracker" tabindex="0"><i class="fas fa-chart-line"></i> Mood Tracker</button>
         <button class="tab-btn" data-tab="cbt-exercise" role="tab" aria-selected="false" aria-controls="cbt-exercise" tabindex="0"><i class="fas fa-brain"></i> CBT Tools</button>
         <button class="tab-btn" data-tab="gratitude" role="tab" aria-selected="false" aria-controls="gratitude" tabindex="0"><i class="fas fa-heart"></i> Gratitude</button>
-        <button class="tab-btn" data-tab="gratitude" role="tab" aria-selected="false" aria-controls="gratitude" tabindex="0"><i class="fas fa-heart"></i> Gratitude</button>
         <button class="tab-btn" data-tab="mindfulness" role="tab" aria-selected="false" aria-controls="mindfulness" tabindex="0"><i class="fas fa-spa"></i> Mindfulness</button>
         <button class="tab-btn" data-tab="resources" role="tab" aria-selected="false" aria-controls="resources" tabindex="0"><i class="fas fa-book"></i> Resources</button>
+        <button class="tab-btn" data-tab="settings" role="tab" aria-selected="false" aria-controls="settings" tabindex="0"><i class="fas fa-cog"></i> Settings</button>
     </nav>
 
-    <main>
+    <main id="main-content">
         <!-- Dashboard Section -->
         <section id="dashboard" class="tab-content active" role="tabpanel" aria-labelledby="dashboard-title">
             <h2 id="dashboard-title">Welcome to EaseMind</h2>
@@ -104,6 +106,8 @@
             <button id="start-grounding" aria-label="Start or advance grounding exercise"><i class="fas fa-play"></i> Start</button>
             <div id="grounding-history" class="history-container">
                 <h3>Past Sessions</h3>
+                <div id="grounding-history-entries"></div>
+                <button id="show-more-grounding" class="show-more" aria-label="Show more grounding sessions">Show More</button>
             </div>
         </section>
 
@@ -139,7 +143,7 @@
                 <button id="log-mood" disabled aria-label="Log your mood"><i class="fas fa-save"></i> Log Mood</button>
             </div>
             <div class="mood-chart-container">
-                <canvas id="mood-chart" width="400" height="200" aria-label="Mood trend chart"></canvas>
+                <canvas id="mood-chart" aria-label="Mood trend chart"></canvas>
                 <div id="mood-chart-table" class="sr-only">
                     <h3>Mood History</h3>
                     <table>
@@ -155,6 +159,8 @@
             </div>
             <div id="mood-history" class="history-container">
                 <h3>Past Entries</h3>
+                <div id="mood-history-entries"></div>
+                <button id="show-more-mood" class="show-more" aria-label="Show more mood entries">Show More</button>
             </div>
             <div class="streak-counter">Streak: <span id="mood-streak">0</span> days</div>
         </section>
@@ -179,6 +185,8 @@
             </div>
             <div id="cbt-history" class="history-container">
                 <h3>Past Thought Records</h3>
+                <div id="cbt-history-entries"></div>
+                <button id="show-more-cbt" class="show-more" aria-label="Show more CBT records">Show More</button>
             </div>
         </section>
 
@@ -193,6 +201,8 @@
             </div>
             <div id="gratitude-history" class="history-container">
                 <h3>Past Entries</h3>
+                <div id="gratitude-history-entries"></div>
+                <button id="show-more-gratitude" class="show-more" aria-label="Show more gratitude entries">Show More</button>
             </div>
             <div class="streak-counter">Streak: <span id="gratitude-streak">0</span> days</div>
         </section>
@@ -200,8 +210,14 @@
         <!-- Mindfulness Meditation Section -->
         <section id="mindfulness" class="tab-content" role="tabpanel" aria-labelledby="mindfulness-title">
             <h2 id="mindfulness-title">Mindfulness Meditation</h2>
-            <p>Practice a 1-minute guided mindfulness exercise to center yourself. No audio, just calm prompts.</p>
+            <p>Practice a guided mindfulness exercise to center yourself. Choose a duration below.</p>
             <div class="mindfulness-container">
+                <label for="meditation-duration">Duration:</label>
+                <select id="meditation-duration" aria-label="Select meditation duration">
+                    <option value="60000">1 minute</option>
+                    <option value="180000">3 minutes</option>
+                    <option value="300000">5 minutes</option>
+                </select>
                 <p id="mindfulness-instruction" class="fade" aria-live="polite">Ready to begin?</p>
                 <div class="progress-bar">
                     <div id="mindfulness-progress"></div>
@@ -242,6 +258,17 @@
                 <p><strong>U.S. Crisis Line:</strong> Call <a href="tel:988" aria-label="Call U.S. crisis line">988</a> (mobile only, otherwise dial 988)</p>
                 <p><strong>International:</strong> Find your local crisis line at <a href="https://findahelpline.com" target="_blank" aria-label="Find international crisis lines">findahelpline.com</a></p>
                 <p><strong>Emergency:</strong> If in immediate danger, call <a href="tel:911" aria-label="Call emergency services">911</a> (U.S., mobile only, otherwise dial 911) or your local emergency number.</p>
+            </div>
+        </section>
+
+        <!-- Settings Section -->
+        <section id="settings" class="tab-content" role="tabpanel" aria-labelledby="settings-title">
+            <h2 id="settings-title">Settings</h2>
+            <p>Customize your EaseMind experience.</p>
+            <div class="settings-form">
+                <label for="reminder-time">Daily Reminder Time</label>
+                <input type="time" id="reminder-time" aria-label="Set daily reminder time">
+                <button id="save-settings" aria-label="Save settings"><i class="fas fa-save"></i> Save</button>
             </div>
         </section>
 
