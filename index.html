@@ -5,51 +5,255 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EaseMind - Mental Health Companion</title>
     <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
+    <!-- Onboarding Modal -->
+    <div id="onboarding-modal" class="modal" role="dialog" aria-labelledby="modal-title">
+        <div class="modal-content">
+            <h2 id="modal-title">Welcome to EaseMind</h2>
+            <p>Your companion for mental well-being. Explore tools like breathing exercises, mood tracking, and gratitude journaling to support your journey. Start with the dashboard for a daily overview.</p>
+            <button id="close-onboarding" aria-label="Close onboarding modal">Get Started</button>
+        </div>
+    </div>
+
     <header>
-        <h1>EaseMind</h1>
-        <p>Your mental health companion for grief, panic, and depression.</p>
+        <div class="header-content">
+            <h1>EaseMind</h1>
+            <p>Your gentle companion for navigating grief, panic, and depression.</p>
+            <a href="#crisis" class="crisis-link" aria-label="Access crisis support resources"><i class="fas fa-phone"></i> Crisis Support</a>
+        </div>
     </header>
 
+    <nav class="tabs" role="tablist">
+        <button class="tab-btn active" data-tab="dashboard" role="tab" aria-selected="true" aria-controls="dashboard" tabindex="0"><i class="fas fa-home"></i> Dashboard</button>
+        <button class="tab-btn" data-tab="breathing" role="tab" aria-selected="false" aria-controls="breathing" tabindex="0"><i class="fas fa-wind"></i> Breathing</button>
+        <button class="tab-btn" data-tab="grounding" role="tab" aria-selected="false" aria-controls="grounding" tabindex="0"><i class="fas fa-leaf"></i> Grounding</button>
+        <button class="tab-btn" data-tab="mood-tracker" role="tab" aria-selected="false" aria-controls="mood-tracker" tabindex="0"><i class="fas fa-chart-line"></i> Mood Tracker</button>
+        <button class="tab-btn" data-tab="cbt-exercise" role="tab" aria-selected="false" aria-controls="cbt-exercise" tabindex="0"><i class="fas fa-brain"></i> CBT Tools</button>
+        <button class="tab-btn" data-tab="gratitude" role="tab" aria-selected="false" aria-controls="gratitude" tabindex="0"><i class="fas fa-heart"></i> Gratitude</button>
+        <button class="tab-btn" data-tab="gratitude" role="tab" aria-selected="false" aria-controls="gratitude" tabindex="0"><i class="fas fa-heart"></i> Gratitude</button>
+        <button class="tab-btn" data-tab="mindfulness" role="tab" aria-selected="false" aria-controls="mindfulness" tabindex="0"><i class="fas fa-spa"></i> Mindfulness</button>
+        <button class="tab-btn" data-tab="resources" role="tab" aria-selected="false" aria-controls="resources" tabindex="0"><i class="fas fa-book"></i> Resources</button>
+    </nav>
+
     <main>
+        <!-- Dashboard Section -->
+        <section id="dashboard" class="tab-content active" role="tabpanel" aria-labelledby="dashboard-title">
+            <h2 id="dashboard-title">Welcome to EaseMind</h2>
+            <p>Your daily mental health overview. Start your day with intention.</p>
+            <div class="dashboard-progress">
+                <svg class="progress-ring" width="120" height="120">
+                    <circle class="progress-ring-bg" cx="60" cy="60" r="50" />
+                    <circle id="progress-ring-fill" class="progress-ring-fill" cx="60" cy="60" r="50" />
+                </svg>
+                <p id="progress-text">0% Today’s Activities</p>
+            </div>
+            <div class="dashboard-summary">
+                <div class="dash-item">
+                    <h3>Activity Streaks</h3>
+                    <p>Breathing: <span id="dash-breathing-streak">0</span> days</p>
+                    <p>Mood Logs: <span id="dash-mood-streak">0</span> days</p>
+                    <p>Gratitude: <span id="dash-gratitude-streak">0</span> days</p>
+                    <p>Mindfulness: <span id="dash-mindfulness-streak">0</span> days</p>
+                </div>
+                <div class="dash-item">
+                    <h3>Recent Mood</h3>
+                    <p id="dash-recent-mood">No recent logs</p>
+                </div>
+                <div class="dash-item">
+                    <h3>Daily Inspiration</h3>
+                    <p id="daily-quote" class="fade">Take a deep breath and embrace the moment.</p>
+                </div>
+            </div>
+            <div class="quick-actions">
+                <button id="quick-breathe" aria-label="Start breathing exercise"><i class="fas fa-wind"></i> Quick Breathe</button>
+                <button id="quick-mood" aria-label="Log your mood"><i class="fas fa-chart-line"></i> Log Mood</button>
+                <button id="quick-gratitude" aria-label="Write a gratitude note"><i class="fas fa-heart"></i> Gratitude Note</button>
+            </div>
+        </section>
+
         <!-- Breathing Exercise Section -->
-        <section id="breathing">
-            <h2>Guided Breathing</h2>
-            <p>Follow the circle to calm your mind.</p>
-            <div id="breathing-circle"></div>
-            <button id="start-breathing">Start Breathing</button>
-            <p id="breathing-instruction">Breathe In...</p>
+        <section id="breathing" class="tab-content" role="tabpanel" aria-labelledby="breathing-title">
+            <h2 id="breathing-title">Guided Box Breathing</h2>
+            <p>Follow the 4-4-4-4 cycle: Inhale, Hold, Exhale, Hold. Ideal for panic and stress.</p>
+            <div class="breathing-container">
+                <div id="breathing-circle" aria-live="polite">
+                    <div class="circle-inner"></div>
+                </div>
+                <p id="breathing-instruction" class="fade">Ready to begin?</p>
+            </div>
+            <button id="start-breathing" aria-label="Start or stop breathing exercise"><i class="fas fa-play"></i> Start</button>
+            <div class="progress-bar">
+                <div id="breathing-progress"></div>
+            </div>
+            <div class="streak-counter">Streak: <span id="breathing-streak">0</span> days</div>
         </section>
 
         <!-- Grounding Exercise Section -->
-        <section id="grounding">
-            <h2>5-4-3-2-1 Grounding</h2>
-            <p>Use your senses to stay present.</p>
-            <div id="grounding-step"></div>
-            <button id="start-grounding">Start Grounding</button>
+        <section id="grounding" class="tab-content" role="tabpanel" aria-labelledby="grounding-title">
+            <h2 id="grounding-title">5-4-3-2-1 Grounding</h2>
+            <p>Anchoring yourself in the present using your senses. Great for overwhelming thoughts.</p>
+            <div id="grounding-step" class="grounding-display fade" aria-live="polite"></div>
+            <div class="grounding-inputs">
+                <textarea id="grounding-response" placeholder="List items separated by commas..." aria-label="Enter grounding responses"></textarea>
+                <p id="grounding-error" class="error-message" aria-live="assertive"></p>
+                <button id="submit-response" disabled aria-label="Submit grounding response">Submit</button>
+            </div>
+            <button id="start-grounding" aria-label="Start or advance grounding exercise"><i class="fas fa-play"></i> Start</button>
+            <div id="grounding-history" class="history-container">
+                <h3>Past Sessions</h3>
+            </div>
         </section>
 
         <!-- Mood Tracker Section -->
-        <section id="mood-tracker">
-            <h2>Mood Tracker</h2>
-            <p>Log your mood to track your progress.</p>
-            <select id="mood-select">
-                <option value="5">Very Good</option>
-                <option value="4">Good</option>
-                <option value="3">Neutral</option>
-                <option value="2">Low</option>
-                <option value="1">Very Low</option>
-            </select>
-            <textarea id="mood-notes" placeholder="Add notes (optional)"></textarea>
-            <button id="log-mood">Log Mood</button>
-            <canvas id="mood-chart" width="300" height="200"></canvas>
+        <section id="mood-tracker" class="tab-content" role="tabpanel" aria-labelledby="mood-tracker-title">
+            <h2 id="mood-tracker-title">Mood Tracker</h2>
+            <p>Log your moods daily to observe patterns and progress. Notes help reflect on triggers.</p>
+            <div class="mood-log">
+                <div class="mood-emojis" role="radiogroup" aria-label="Select your mood">
+                    <label>
+                        <input type="radio" name="mood" value="5" aria-label="Very Good mood">
+                        <span>😊</span> Very Good
+                    </label>
+                    <label>
+                        <input type="radio" name="mood" value="4" aria-label="Good mood">
+                        <span>🙂</span> Good
+                    </label>
+                    <label>
+                        <input type="radio" name="mood" value="3" aria-label="Neutral mood">
+                        <span>😐</span> Neutral
+                    </label>
+                    <label>
+                        <input type="radio" name="mood" value="2" aria-label="Low mood">
+                        <span>🙁</span> Low
+                    </label>
+                    <label>
+                        <input type="radio" name="mood" value="1" aria-label="Very Low mood">
+                        <span>😢</span> Very Low
+                    </label>
+                </div>
+                <textarea id="mood-notes" placeholder="What influenced your mood today? (optional)" aria-label="Add mood notes"></textarea>
+                <p id="mood-error" class="error-message" aria-live="assertive"></p>
+                <button id="log-mood" disabled aria-label="Log your mood"><i class="fas fa-save"></i> Log Mood</button>
+            </div>
+            <div class="mood-chart-container">
+                <canvas id="mood-chart" width="400" height="200" aria-label="Mood trend chart"></canvas>
+                <div id="mood-chart-table" class="sr-only">
+                    <h3>Mood History</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Mood Value</th>
+                            </tr>
+                        </thead>
+                        <tbody id="mood-chart-data"></tbody>
+                    </table>
+                </div>
+            </div>
+            <div id="mood-history" class="history-container">
+                <h3>Past Entries</h3>
+            </div>
+            <div class="streak-counter">Streak: <span id="mood-streak">0</span> days</div>
+        </section>
+
+        <!-- CBT Exercise Section -->
+        <section id="cbt-exercise" class="tab-content" role="tabpanel" aria-labelledby="cbt-exercise-title">
+            <h2 id="cbt-exercise-title">CBT Thought Record</h2>
+            <p>Challenge negative thoughts using Cognitive Behavioral Therapy techniques.</p>
+            <div class="cbt-form">
+                <label for="cbt-situation">Situation</label>
+                <textarea id="cbt-situation" placeholder="What happened? (e.g., Argument with a friend)" aria-label="Describe the situation"></textarea>
+                <label for="cbt-thought">Negative Thought</label>
+                <textarea id="cbt-thought" placeholder="What did you think? (e.g., They hate me)" aria-label="Describe the negative thought"></textarea>
+                <label for="cbt-evidence-for">Evidence For</label>
+                <textarea id="cbt-evidence-for" placeholder="What supports this thought?" aria-label="List evidence supporting the thought"></textarea>
+                <label for="cbt-evidence-against">Evidence Against</label>
+                <textarea id="cbt-evidence-against" placeholder="What contradicts this thought?" aria-label="List evidence against the thought"></textarea>
+                <label for="cbt-balanced">Balanced Thought</label>
+                <textarea id="cbt-balanced" placeholder="A more balanced perspective" aria-label="Write a balanced thought"></textarea>
+                <p id="cbt-error" class="error-message" aria-live="assertive"></p>
+                <button id="log-cbt" disabled aria-label="Save thought record"><i class="fas fa-save"></i> Save Thought Record</button>
+            </div>
+            <div id="cbt-history" class="history-container">
+                <h3>Past Thought Records</h3>
+            </div>
+        </section>
+
+        <!-- Gratitude Journal Section -->
+        <section id="gratitude" class="tab-content" role="tabpanel" aria-labelledby="gratitude-title">
+            <h2 id="gratitude-title">Gratitude Journal</h2>
+            <p>Reflect on positive aspects to boost mood and resilience. List 3 things you’re grateful for.</p>
+            <div class="gratitude-form">
+                <textarea id="gratitude-entry" placeholder="What are you grateful for today? List 3 things..." aria-label="Write gratitude entry"></textarea>
+                <p id="gratitude-error" class="error-message" aria-live="assertive"></p>
+                <button id="log-gratitude" disabled aria-label="Save gratitude entry"><i class="fas fa-save"></i> Save Entry</button>
+            </div>
+            <div id="gratitude-history" class="history-container">
+                <h3>Past Entries</h3>
+            </div>
+            <div class="streak-counter">Streak: <span id="gratitude-streak">0</span> days</div>
+        </section>
+
+        <!-- Mindfulness Meditation Section -->
+        <section id="mindfulness" class="tab-content" role="tabpanel" aria-labelledby="mindfulness-title">
+            <h2 id="mindfulness-title">Mindfulness Meditation</h2>
+            <p>Practice a 1-minute guided mindfulness exercise to center yourself. No audio, just calm prompts.</p>
+            <div class="mindfulness-container">
+                <p id="mindfulness-instruction" class="fade" aria-live="polite">Ready to begin?</p>
+                <div class="progress-bar">
+                    <div id="mindfulness-progress"></div>
+                </div>
+            </div>
+            <button id="start-mindfulness" aria-label="Start or stop mindfulness meditation"><i class="fas fa-play"></i> Start</button>
+            <div class="streak-counter">Streak: <span id="mindfulness-streak">0</span> days</div>
+        </section>
+
+        <!-- Resources Section -->
+        <section id="resources" class="tab-content" role="tabpanel" aria-labelledby="resources-title">
+            <h2 id="resources-title">Educational Resources</h2>
+            <p>Learn more about mental health with curated, evidence-based content.</p>
+            <div class="resource-list">
+                <div class="resource-item">
+                    <h3>Understanding Anxiety</h3>
+                    <p>Anxiety is a normal response to stress, but when overwhelming, it can disrupt life. Learn coping strategies.</p>
+                    <a href="https://www.nimh.nih.gov/health/topics/anxiety-disorders" class="resource-link" target="_blank" aria-label="Read more about anxiety">Read More</a>
+                </div>
+                <div class="resource-item">
+                    <h3>Managing Depression</h3>
+                    <p>Depression impacts mood and energy. Discover evidence-based ways to manage symptoms.</p>
+                    <a href="https://www.nimh.nih.gov/health/topics/depression" class="resource-link" target="_blank" aria-label="Read more about depression">Read More</a>
+                </div>
+                <div class="resource-item">
+                    <h3>Navigating Grief</h3>
+                    <p>Grief is a natural response to loss. Explore stages and healthy coping methods.</p>
+                    <a href="https://www.mayoclinic.org/patient-visitor-guide/support-groups/grief-support" class="resource-link" target="_blank" aria-label="Read more about grief">Read More</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Crisis Support Section -->
+        <section id="crisis" class="tab-content" role="tabpanel" aria-labelledby="crisis-title">
+            <h2 id="crisis-title">Crisis Support</h2>
+            <p>In a crisis? Reach out for immediate help.</p>
+            <div class="crisis-resources">
+                <p><strong>U.S. Crisis Line:</strong> Call <a href="tel:988" aria-label="Call U.S. crisis line">988</a> (mobile only, otherwise dial 988)</p>
+                <p><strong>International:</strong> Find your local crisis line at <a href="https://findahelpline.com" target="_blank" aria-label="Find international crisis lines">findahelpline.com</a></p>
+                <p><strong>Emergency:</strong> If in immediate danger, call <a href="tel:911" aria-label="Call emergency services">911</a> (U.S., mobile only, otherwise dial 911) or your local emergency number.</p>
+            </div>
+        </section>
+
+        <!-- Privacy Policy Section -->
+        <section id="privacy" class="tab-content" role="tabpanel" aria-labelledby="privacy-title">
+            <h2 id="privacy-title">Privacy Policy</h2>
+            <p>Your data is stored locally on your device using browser storage. No personal information is collected or shared with third parties. For questions, contact us at support@easemind.app.</p>
         </section>
     </main>
 
     <footer>
-        <p>&copy; 2025 EaseMind. For emergencies, call <a href="tel:988">988</a> (U.S.) or your local crisis line.</p>
+        <p>&copy; 2025 EaseMind. <a href="#privacy" aria-label="View privacy policy">Privacy Policy</a> | Data secured with encryption. For immediate help, call <a href="tel:988" aria-label="Call U.S. crisis line">988</a> (U.S.).</p>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
