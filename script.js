@@ -218,7 +218,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const groundingError = document.getElementById('grounding-error');
     const submitResponseBtn = document.getElementById('submit-response');
     const startGroundingBtn = document.getElementById('start-grounding');
-    const groundingHistory = document.getElementById('grounding-history');
+    const groundingHistoryEntries = document.getElementById('grounding-history-entries');
+    const showMoreGroundingBtn = document.getElementById('show-more-grounding');
     const groundingSteps = [
         { prompt: 'Name 5 things you can see.', count: 5 },
         { prompt: 'Name 4 things you can touch.', count: 4 },
@@ -228,15 +229,24 @@ document.addEventListener('DOMContentLoaded', () => {
     ];
     let currentStep = -1;
     let responses = [];
-
     let groundingSessions = JSON.parse(localStorage.getItem('groundingSessions')) || [];
-    groundingSessions.forEach(session => appendSessionToHistory(session));
+    let groundingPage = 1;
+    const itemsPerPage = 5;
+
+    function displayGroundingHistory(page) {
+        groundingHistoryEntries.innerHTML = '';
+        const start = (page - 1) * itemsPerPage;
+        const end = start + itemsPerPage;
+        const paginatedSessions = groundingSessions.slice(-end, -start || undefined).reverse();
+        paginatedSessions.forEach(session => appendSessionToHistory(session));
+        showMoreGroundingBtn.style.display = end < groundingSessions.length ? 'block' : 'none';
+    }
 
     function appendSessionToHistory(session) {
         const entry = document.createElement('div');
         entry.classList.add('history-entry');
         entry.innerHTML = `<p><strong>${new Date(session.timestamp).toLocaleString()}</strong></p><ul>${session.responses.map(r => `<li>${r.prompt}: ${r.response}</li>`).join('')}</ul>`;
-        groundingHistory.appendChild(entry);
+        groundingHistoryEntries.appendChild(entry);
     }
 
     startGroundingBtn.addEventListener('click', () => {
@@ -277,7 +287,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const session = { timestamp, responses };
             groundingSessions.push(session);
             localStorage.setItem('groundingSessions', JSON.stringify(groundingSessions));
-            appendSessionToHistory(session);
+            groundingPage = 1;
+            displayGroundingHistory(groundingPage);
             groundingStep.textContent = 'Well done! Session complete.';
             groundingStep.classList.remove('fade');
             setTimeout(() => groundingStep.classList.add('fade'), 50);
@@ -316,6 +327,13 @@ document.addEventListener('DOMContentLoaded', () => {
         groundingError.textContent = '';
     });
 
+    showMoreGroundingBtn.addEventListener('click', () => {
+        groundingPage++;
+        displayGroundingHistory(groundingPage);
+    });
+
+    displayGroundingHistory(groundingPage);
+
     // Mood Tracker
     const moodRadios = document.querySelectorAll('input[name="mood"]');
     const moodNotes = document.getElementById('mood-notes');
@@ -323,14 +341,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const logMoodBtn = document.getElementById('log-mood');
     const moodChartCanvas = document.getElementById('mood-chart');
     const moodChartTable = document.getElementById('mood-chart-data');
-    const moodHistory = document.getElementById('mood-history');
+    const moodHistoryEntries = document.getElementById('mood-history-entries');
+    const showMoreMoodBtn = document.getElementById('show-more-mood');
     const ctx = moodChartCanvas.getContext('2d');
-
     let moods = JSON.parse(localStorage.getItem('moods')) || [];
-    updateChart();
-    updateHistory();
-    updateDashRecentMood();
-    updateChartTable();
+    let moodPage = 1;
+
+    function displayMoodHistory(page) {
+        moodHistoryEntries.innerHTML = '';
+        const start = (page - 1) * itemsPerPage;
+        const end = start + itemsPerPage;
+        const paginatedMoods = moods.slice(-end, -start || undefined).reverse();
+        paginatedMoods.forEach(mood => appendToHistory(mood));
+        showMoreMoodBtn.style.display = end < moods.length ? 'block' : 'none';
+    }
 
     function getMoodEmoji(value) {
         const emojis = {1: '😢', 2: '🙁', 3: '😐', 4: '🙂', 5: '😊'};
@@ -354,6 +378,7 @@ document.addEventListener('DOMContentLoaded', () => {
             },
             options: {
                 responsive: true,
+                maintainAspectRatio: false,
                 scales: {
                     y: {
                         min: 0.5,
@@ -384,12 +409,11 @@ document.addEventListener('DOMContentLoaded', () => {
             <p><strong>${new Date(mood.timestamp).toLocaleString()}</strong> - ${getMoodEmoji(mood.value)} (${mood.value}/5)</p>
             ${mood.notes ? `<p>${mood.notes}</p>` : ''}
         `;
-        moodHistory.appendChild(entry);
+        moodHistoryEntries.appendChild(entry);
     }
 
     function updateHistory() {
-        moodHistory.innerHTML = '<h3>Past Entries</h3>';
-        moods.forEach(appendToHistory);
+        displayMoodHistory(moodPage);
     }
 
     function updateDashRecentMood() {
@@ -422,7 +446,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         updateChart();
         updateChartTable();
-        appendToHistory(newMood);
+        moodPage = 1;
+        updateHistory();
         updateDashRecentMood();
         moodNotes.value = '';
         moodRadios.forEach(r => r.checked = false);
@@ -444,6 +469,16 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    showMoreMoodBtn.addEventListener('click', () => {
+        moodPage++;
+        displayMoodHistory(moodPage);
+    });
+
+    updateChart();
+    updateChartTable();
+    updateHistory();
+    updateDashRecentMood();
+
     // CBT Exercise
     const cbtSituation = document.getElementById('cbt-situation');
     const cbtThought = document.getElementById('cbt-thought');
@@ -452,10 +487,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const cbtBalanced = document.getElementById('cbt-balanced');
     const cbtError = document.getElementById('cbt-error');
     const logCbtBtn = document.getElementById('log-cbt');
-    const cbtHistory = document.getElementById('cbt-history');
-
+    const cbtHistoryEntries = document.getElementById('cbt-history-entries');
+    const showMoreCbtBtn = document.getElementById('show-more-cbt');
     let cbtRecords = JSON.parse(localStorage.getItem('cbtRecords')) || [];
-    cbtRecords.forEach(record => appendCbtToHistory(record));
+    let cbtPage = 1;
+
+    function displayCbtHistory(page) {
+        cbtHistoryEntries.innerHTML = '';
+        const start = (page - 1) * itemsPerPage;
+        const end = start + itemsPerPage;
+        const paginatedRecords = cbtRecords.slice(-end, -start || undefined).reverse();
+        paginatedRecords.forEach(record => appendCbtToHistory(record));
+        showMoreCbtBtn.style.display = end < cbtRecords.length ? 'block' : 'none';
+    }
 
     function appendCbtToHistory(record) {
         const entry = document.createElement('div');
@@ -468,7 +512,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <p><strong>Evidence Against:</strong> ${record.evidenceAgainst}</p>
             <p><strong>Balanced Thought:</strong> ${record.balanced}</p>
         `;
-        cbtHistory.appendChild(entry);
+        cbtHistoryEntries.appendChild(entry);
     }
 
     function checkCbtForm() {
@@ -503,7 +547,8 @@ document.addEventListener('DOMContentLoaded', () => {
         };
         cbtRecords.push(record);
         localStorage.setItem('cbtRecords', JSON.stringify(cbtRecords));
-        appendCbtToHistory(record);
+        cbtPage = 1;
+        displayCbtHistory(cbtPage);
         cbtSituation.value = '';
         cbtThought.value = '';
         cbtEvidenceFor.value = '';
@@ -520,20 +565,36 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    showMoreCbtBtn.addEventListener('click', () => {
+        cbtPage++;
+        displayCbtHistory(cbtPage);
+    });
+
+    displayCbtHistory(cbtPage);
+
     // Gratitude Journal
     const gratitudeEntry = document.getElementById('gratitude-entry');
     const gratitudeError = document.getElementById('gratitude-error');
     const logGratitudeBtn = document.getElementById('log-gratitude');
-    const gratitudeHistory = document.getElementById('gratitude-history');
-
+    const gratitudeHistoryEntries = document.getElementById('gratitude-history-entries');
+    const showMoreGratitudeBtn = document.getElementById('show-more-gratitude');
     let gratitudeEntries = JSON.parse(localStorage.getItem('gratitudeEntries')) || [];
-    gratitudeEntries.forEach(entry => appendGratitudeToHistory(entry));
+    let gratitudePage = 1;
+
+    function displayGratitudeHistory(page) {
+        gratitudeHistoryEntries.innerHTML = '';
+        const start = (page - 1) * itemsPerPage;
+        const end = start + itemsPerPage;
+        const paginatedEntries = gratitudeEntries.slice(-end, -start || undefined).reverse();
+        paginatedEntries.forEach(entry => appendGratitudeToHistory(entry));
+        showMoreGratitudeBtn.style.display = end < gratitudeEntries.length ? 'block' : 'none';
+    }
 
     function appendGratitudeToHistory(entry) {
         const div = document.createElement('div');
         div.classList.add('history-entry');
         div.innerHTML = `<p><strong>${new Date(entry.timestamp).toLocaleString()}</strong></p><p>${entry.text}</p>`;
-        gratitudeHistory.appendChild(div);
+        gratitudeHistoryEntries.appendChild(div);
     }
 
     gratitudeEntry.addEventListener('input', () => {
@@ -561,7 +622,8 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('gratitude-streak').textContent = gratitudeStreak;
         document.getElementById('dash-gratitude-streak').textContent = gratitudeStreak;
         updateProgressRing();
-        appendGratitudeToHistory(entry);
+        gratitudePage = 1;
+        displayGratitudeHistory(gratitudePage);
         gratitudeEntry.value = '';
         logGratitudeBtn.disabled = true;
         gratitudeError.textContent = '';
@@ -574,13 +636,20 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    showMoreGratitudeBtn.addEventListener('click', () => {
+        gratitudePage++;
+        displayGratitudeHistory(gratitudePage);
+    });
+
+    displayGratitudeHistory(gratitudePage);
+
     // Mindfulness Meditation
     const mindfulnessInstruction = document.getElementById('mindfulness-instruction');
     const startMindfulnessBtn = document.getElementById('start-mindfulness');
     const mindfulnessProgress = document.getElementById('mindfulness-progress');
+    const meditationDurationSelect = document.getElementById('meditation-duration');
     let mindfulnessAnimation;
     let isMeditating = false;
-    const meditationDuration = 60000;
     const prompts = [
         'Focus on your breath, notice the air moving in and out.',
         'Observe any thoughts without judgment, let them pass.',
@@ -608,6 +677,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('dash-mindfulness-streak').textContent = mindfulnessStreak;
         updateProgressRing();
 
+        const meditationDuration = parseInt(meditationDurationSelect.value);
         let startTime = performance.now();
         let promptIndex = 0;
 
@@ -651,6 +721,26 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // Settings: Reminder Time
+    const reminderTimeInput = document.getElementById('reminder-time');
+    const saveSettingsBtn = document.getElementById('save-settings');
+    let reminderTime = localStorage.getItem('reminderTime') || '20:00';
+
+    reminderTimeInput.value = reminderTime;
+
+    saveSettingsBtn.addEventListener('click', () => {
+        reminderTime = reminderTimeInput.value;
+        localStorage.setItem('reminderTime', reminderTime);
+        scheduleReminder();
+    });
+
+    saveSettingsBtn.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            saveSettingsBtn.click();
+        }
+    });
+
     // Reminder Notification
     function requestNotificationPermission() {
         if (Notification.permission === 'default') {
@@ -665,9 +755,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function scheduleReminder() {
-        setInterval(() => {
+        const [hours, minutes] = reminderTime.split(':').map(Number);
+        clearInterval(window.reminderInterval); // Clear any existing interval
+        window.reminderInterval = setInterval(() => {
             const now = new Date();
-            if (now.getHours() === 20 && now.getMinutes() === 0 && now.getSeconds() === 0) {
+            if (now.getHours() === hours && now.getMinutes() === minutes && now.getSeconds() === 0) {
                 new Notification('EaseMind Reminder', {
                     body: 'Take a moment to log your mood or try a breathing exercise.',
                     icon: 'https://via.placeholder.com/64' // Replace with actual icon
