@@ -4,7 +4,7 @@
 
 (function() {
     function sendPageView() {
-        fetch("https://vercel-analytics.example.com/pageview", {
+        fetch("https://ease-mind-theta.vercel.app/", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
