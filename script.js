@@ -1,3 +1,4 @@
+console.log('script.js loaded');
 import { inject } from '@vercel/analytics';
 
 document.addEventListener('DOMContentLoaded', () => {
