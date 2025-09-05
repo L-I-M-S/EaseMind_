@@ -1,5 +1,8 @@
+import { inject } from '@vercel/analytics';
+
 document.addEventListener('DOMContentLoaded', () => {
-    // Initialize Streaks and Data
+    // Initialize Vercel Analytics
+    inject();
     let breathingStreak = parseInt(localStorage.getItem('breathingStreak')) || 0;
     let moodStreak = parseInt(localStorage.getItem('moodStreak')) || 0;
     let gratitudeStreak = parseInt(localStorage.getItem('gratitudeStreak')) || 0;
